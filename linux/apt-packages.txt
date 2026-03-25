@@ -1,0 +1,7 @@
+zsh
+tmux
+git
+fzf
+ripgrep
+fd-find
+bat

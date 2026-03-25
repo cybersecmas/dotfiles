@@ -1,0 +1,7 @@
+starship
+tmux
+git
+fzf
+ripgrep
+fd
+bat
