@@ -68,8 +68,21 @@ set_default_shell() {
   fi
 }
 
+# Install Nerd Font (macOS only)
+install_nerd_font() {
+  if [ "$(uname -s)" != "Darwin" ]; then return; fi
+  if brew list --cask font-jetbrains-mono-nerd-font &>/dev/null; then
+    success "Nerd Font already installed"
+  else
+    info "Installing JetBrainsMono Nerd Font..."
+    brew install --cask font-jetbrains-mono-nerd-font
+    success "Nerd Font installed"
+  fi
+}
+
 install_packages
 link_dotfiles
 set_default_shell
+install_nerd_font
 
 success "Done. Restart your terminal or run: source ~/.zshrc"
