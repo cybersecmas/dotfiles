@@ -1,6 +1,5 @@
-[user]
-	name  = Cyber Master
-	email = cybersecmas@gmail.com
+[include]
+	path = ~/.gitconfig.local
 
 [core]
 	editor          = vim
