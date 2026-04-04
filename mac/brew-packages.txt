@@ -5,3 +5,4 @@ fzf
 ripgrep
 fd
 bat
+gh
