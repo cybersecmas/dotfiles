@@ -1,3 +1,6 @@
 [user]
 	name  = Your Name
-	email = your@email.com
+	# Use GitHub noreply email to keep your real email private in public commits.
+	# Find yours at: GitHub → Settings → Emails → "Keep my email address private"
+	# Format: <ID>+<username>@users.noreply.github.com
+	email = <ID>+<username>@users.noreply.github.com

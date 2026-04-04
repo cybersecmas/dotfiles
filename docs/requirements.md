@@ -415,6 +415,44 @@ Return results strictly in this order:
 
 ---
 
+# Security Requirements
+
+Scripts and configuration must follow these security rules:
+
+## No Secrets in Version Control
+
+* Do **not** hardcode personal information (name, email) in committed files
+* Git user identity must be stored in `~/.gitconfig.local` (gitignored)
+* `git/.gitconfig` must use `[include] path = ~/.gitconfig.local`
+* Provide `git/.gitconfig.local.example` as a template; `install.sh` copies it on first run
+* SSH config (`~/.ssh/config`) must remain local — not symlinked from dotfiles
+
+## Safe Remote Script Execution
+
+* Do **not** pipe `curl` directly to `sh` (`curl | sh`)
+* Download installer scripts to a temp file first, then execute:
+
+```bash
+script="$(mktemp)"
+curl -fsSL https://example.com/install.sh -o "$script" || error "Download failed"
+sh "$script" --yes
+rm -f "$script"
+```
+
+## Shell Script Safety
+
+* Always quote variables — avoid unquoted `$()` command substitution
+* Use `xargs` for passing file-based lists to commands (e.g. package installs)
+* Wrap commands that may fail in non-critical contexts (e.g. `chsh`) in `if` blocks and use `warn()` instead of crashing
+* Use `set -e` in all scripts
+
+## Local Override Pattern
+
+* Files matching `*.local` are gitignored — safe for personal/machine-specific config
+* `install.sh` must create local config files from `.example` templates on first run, with a `warn()` prompting the user to update them
+
+---
+
 # Constraints
 
 * keep configuration minimal
@@ -422,6 +460,7 @@ Return results strictly in this order:
 * avoid unnecessary plugins
 * ensure compatibility with macOS and Linux
 * maintain clean and readable scripts
+* never commit personal information or secrets
 
 ---
 

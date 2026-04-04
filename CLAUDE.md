@@ -43,6 +43,21 @@ Editing any file in `~/dotfiles` takes effect immediately — no copy step neede
 - Keep scripts idempotent: always check state before making changes
 - No external dependencies beyond what's in the package lists
 
+## Security Rules
+
+- **Never hardcode personal info** (name, email) in committed files — use `~/.gitconfig.local` (excluded by `.gitignore`)
+- **Never use `curl | sh`** — download to a temp file first, then execute:
+  ```bash
+  script="$(mktemp)"
+  curl -fsSL https://example.com/install.sh -o "$script"
+  sh "$script"
+  rm -f "$script"
+  ```
+- **Always quote variables** in shell scripts — use `xargs` instead of unquoted `$()`
+- **SSH config stays local** — do not add `~/.ssh/config` to dotfiles (contains machine-specific hosts)
+- **Wrap `chsh` in `if`** — it can fail in restricted environments; use `warn()` instead of crashing
+- File `*.local` is gitignored — safe to store personal overrides there
+
 ## What NOT to Do
 
 - Do not add Oh My Zsh or Prezto
@@ -50,6 +65,7 @@ Editing any file in `~/dotfiles` takes effect immediately — no copy step neede
 - Do not source plugins that add >50ms to shell startup
 - Do not hardcode paths — use `$HOME` and `$DOTFILES_DIR`
 - Do not commit secrets or personal tokens
+- Do not commit `~/.ssh/config` or any SSH keys
 
 ## How to Test Changes
 
@@ -62,6 +78,15 @@ Editing any file in `~/dotfiles` takes effect immediately — no copy step neede
 
 - `starship/starship.toml`: palette section phải là `[palettes.catppuccin_mocha]` (có `s`),
   không phải `[palette.catppuccin_mocha]` — Starship sẽ báo lỗi config nếu sai
+
+## Git Identity
+
+Git user config (name, email) is stored in `~/.gitconfig.local`, **not committed to the repo**.
+
+`git/.gitconfig` uses `[include] path = ~/.gitconfig.local` to load it.
+
+`git/.gitconfig.local.example` is the template — `install.sh` copies it to `~` on first run.
+Update `~/.gitconfig.local` with your real name and email after install.
 
 ## Local Overrides
 
