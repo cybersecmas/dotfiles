@@ -117,7 +117,10 @@ secure_permissions() {
   
   if [ -d "$HOME/.ssh" ]; then
     chmod 700 "$HOME/.ssh"
-    find "$HOME/.ssh" -type f -name "id_*" -exec chmod 600 {} \; 2>/dev/null || true
+    # Set 600 for private keys (files starting with id_ but without .pub)
+    find "$HOME/.ssh" -type f -name "id_*" ! -name "*.pub" -exec chmod 600 {} + 2>/dev/null || true
+    # Set 644 for public keys
+    find "$HOME/.ssh" -type f -name "*.pub" -exec chmod 644 {} + 2>/dev/null || true
   fi
 }
 
