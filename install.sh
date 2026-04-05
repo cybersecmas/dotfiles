@@ -6,6 +6,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 info()    { echo "[INFO]  $*"; }
 success() { echo "[OK]    $*"; }
 warn()    { echo "[WARN]  $*"; }
+error()   { echo "[ERROR] $*" >&2; exit 1; }
 
 # Backup existing file and create symlink
 link_file() {
@@ -52,8 +53,12 @@ install_packages() {
       # Install gh (GitHub CLI) on Linux — not in default apt repos
       if ! command -v gh &>/dev/null; then
         info "Installing GitHub CLI (gh)..."
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-          | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        local gpg_tmp
+        gpg_tmp="$(mktemp)"
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$gpg_tmp" \
+          || error "Failed to download gh keyring"
+        sudo install -m 644 "$gpg_tmp" /usr/share/keyrings/githubcli-archive-keyring.gpg
+        rm -f "$gpg_tmp"
         echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
           | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
         sudo apt-get update -qq
@@ -103,8 +108,22 @@ install_nerd_font() {
   fi
 }
 
+# Enforce secure permissions on local directories
+secure_permissions() {
+  info "Applying secure permissions..."
+  
+  mkdir -p "$HOME/.local/bin"
+  chmod 755 "$HOME/.local/bin"
+  
+  if [ -d "$HOME/.ssh" ]; then
+    chmod 700 "$HOME/.ssh"
+    find "$HOME/.ssh" -type f -name "id_*" -exec chmod 600 {} \; 2>/dev/null || true
+  fi
+}
+
 install_packages
 link_dotfiles
+secure_permissions
 set_default_shell
 install_nerd_font
 
