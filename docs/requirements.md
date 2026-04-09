@@ -451,6 +451,10 @@ rm -f "$script"
 * Files matching `*.local` are gitignored — safe for personal/machine-specific config
 * `install.sh` must create local config files from `.example` templates on first run, with a `warn()` prompting the user to update them
 
+## Strict File Permissions
+
+* Các scripts tự động hoá phải kiểm tra quyền của những thư mục nhạy cảm (~/.ssh là 700). Private keys thuộc nhóm id_* phải là kiểu 600, Public keys *.pub phải là kiểu 644.
+
 ---
 
 # Constraints

@@ -57,6 +57,7 @@ Editing any file in `~/dotfiles` takes effect immediately — no copy step neede
 - **SSH config stays local** — do not add `~/.ssh/config` to dotfiles (contains machine-specific hosts)
 - **Wrap `chsh` in `if`** — it can fail in restricted environments; use `warn()` instead of crashing
 - File `*.local` is gitignored — safe to store personal overrides there
+- **Strict File Permissions**: Bất kỳ thư mục/file nhạy cảm nào tạo ra (~/.ssh, ~/.gnupg) phải bị ép quyền 700. Private keys phải bị ép 600 và Public keys 644.
 
 ## What NOT to Do
 
