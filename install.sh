@@ -82,6 +82,23 @@ link_dotfiles() {
   fi
 }
 
+# Install uv (Python package manager)
+install_uv() {
+  if command -v uv > /dev/null 2>&1; then
+    success "uv already installed, skipping"
+    return
+  fi
+
+  info "Installing uv..."
+  local script
+  script="$(mktemp)"
+  curl -fsSL https://astral.sh/uv/install.sh -o "$script" \
+    || error "Failed to download uv installer"
+  sh "$script"
+  rm -f "$script"
+  success "uv installed"
+}
+
 # Set zsh as default shell if needed
 set_default_shell() {
   if [ "$SHELL" != "$(command -v zsh)" ]; then
@@ -125,6 +142,7 @@ secure_permissions() {
 }
 
 install_packages
+install_uv
 link_dotfiles
 secure_permissions
 set_default_shell
