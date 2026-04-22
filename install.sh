@@ -34,12 +34,12 @@ install_packages() {
   case "$(uname -s)" in
     Darwin)
       info "Installing Homebrew packages..."
-      grep -v '^#' "$DOTFILES_DIR/mac/brew-packages.txt" | xargs brew install
+      grep -v '^#' "$DOTFILES_DIR/mac/brew-packages.txt" | grep -v '^[[:space:]]*$' | xargs brew install
       ;;
     Linux)
       info "Installing apt packages..."
       sudo apt-get update -qq
-      grep -v '^#' "$DOTFILES_DIR/linux/apt-packages.txt" | xargs sudo apt-get install -y
+      grep -v '^#' "$DOTFILES_DIR/linux/apt-packages.txt" | grep -v '^[[:space:]]*$' | xargs sudo apt-get install -y
       # Install starship on Linux
       if ! command -v starship &>/dev/null; then
         info "Installing Starship..."
@@ -84,7 +84,7 @@ link_dotfiles() {
 
 # Install uv (Python package manager)
 install_uv() {
-  if command -v uv > /dev/null 2>&1; then
+  if command -v uv &>/dev/null; then
     success "uv already installed, skipping"
     return
   fi
@@ -94,7 +94,7 @@ install_uv() {
   script="$(mktemp)"
   curl -fsSL https://astral.sh/uv/install.sh -o "$script" \
     || error "Failed to download uv installer"
-  sh "$script"
+  sh "$script" --yes
   rm -f "$script"
   success "uv installed"
 }
