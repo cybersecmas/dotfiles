@@ -99,6 +99,23 @@ install_uv() {
   success "uv installed"
 }
 
+# Install Claude Code CLI
+install_claude_code() {
+  if command -v claude &>/dev/null; then
+    success "Claude Code already installed, skipping"
+    return
+  fi
+
+  info "Installing Claude Code..."
+  local script
+  script="$(mktemp)"
+  curl -fsSL https://claude.ai/install.sh -o "$script" \
+    || error "Failed to download Claude Code installer"
+  bash "$script"
+  rm -f "$script"
+  success "Claude Code installed"
+}
+
 # Set zsh as default shell if needed
 set_default_shell() {
   if [ "$SHELL" != "$(command -v zsh)" ]; then
@@ -139,10 +156,15 @@ secure_permissions() {
     # Set 644 for public keys
     find "$HOME/.ssh" -type f -name "*.pub" -exec chmod 644 {} + 2>/dev/null || true
   fi
+  
+  if [ -d "$HOME/.gnupg" ]; then
+    chmod 700 "$HOME/.gnupg"
+  fi
 }
 
 install_packages
 install_uv
+install_claude_code
 link_dotfiles
 secure_permissions
 set_default_shell

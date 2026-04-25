@@ -430,12 +430,12 @@ Scripts and configuration must follow these security rules:
 ## Safe Remote Script Execution
 
 * Do **not** pipe `curl` directly to `sh` (`curl | sh`)
-* Download installer scripts to a temp file first, then execute:
+* Download installer scripts to a temp file first, then execute (using `sh` or `bash` depending on the official instructions):
 
 ```bash
 script="$(mktemp)"
 curl -fsSL https://example.com/install.sh -o "$script" || error "Download failed"
-sh "$script" --yes
+sh "$script" --yes # Or bash "$script" if required by the software
 rm -f "$script"
 ```
 

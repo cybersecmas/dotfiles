@@ -46,11 +46,11 @@ Editing any file in `~/dotfiles` takes effect immediately — no copy step neede
 ## Security Rules
 
 - **Never hardcode personal info** (name, email) in committed files — use `~/.gitconfig.local` (excluded by `.gitignore`)
-- **Never use `curl | sh`** — download to a temp file first, then execute:
+- **Never use `curl | sh`** — download to a temp file first, then execute (using `sh` or `bash` depending on the official instructions):
   ```bash
   script="$(mktemp)"
   curl -fsSL https://example.com/install.sh -o "$script"
-  sh "$script"
+  sh "$script" # Or bash "$script" depending on the software's guide
   rm -f "$script"
   ```
 - **Always quote variables** in shell scripts — use `xargs` instead of unquoted `$()`
