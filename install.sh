@@ -83,6 +83,7 @@ link_dotfiles() {
 }
 
 # Install uv (Python package manager)
+# Docs: https://docs.astral.sh/uv/getting-started/installation/
 install_uv() {
   if command -v uv &>/dev/null; then
     success "uv already installed, skipping"
@@ -100,6 +101,7 @@ install_uv() {
 }
 
 # Install Claude Code CLI
+# Docs: https://code.claude.com/docs/en/setup
 install_claude_code() {
   if command -v claude &>/dev/null; then
     success "Claude Code already installed, skipping"
