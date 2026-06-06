@@ -95,7 +95,7 @@ install_uv() {
   script="$(mktemp)"
   curl -fsSL https://astral.sh/uv/install.sh -o "$script" \
     || error "Failed to download uv installer"
-  sh "$script" --yes
+  sh "$script"
   rm -f "$script"
   success "uv installed"
 }
