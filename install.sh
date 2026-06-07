@@ -40,6 +40,15 @@ install_packages() {
       info "Installing apt packages..."
       sudo apt-get update -qq
       grep -v '^#' "$DOTFILES_DIR/linux/apt-packages.txt" | grep -v '^[[:space:]]*$' | xargs sudo apt-get install -y
+
+      # Create symlinks for fd and bat if they are named fdfind and batcat (Debian/Ubuntu specific)
+      mkdir -p "$HOME/.local/bin"
+      if command -v fdfind &>/dev/null; then
+        ln -sf "$(command -v fdfind)" "$HOME/.local/bin/fd"
+      fi
+      if command -v batcat &>/dev/null; then
+        ln -sf "$(command -v batcat)" "$HOME/.local/bin/bat"
+      fi
       # Install starship on Linux
       if ! command -v starship &>/dev/null; then
         info "Installing Starship..."
