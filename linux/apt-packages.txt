@@ -5,3 +5,5 @@ fzf
 ripgrep
 fd-find
 bat
+curl
+ca-certificates
